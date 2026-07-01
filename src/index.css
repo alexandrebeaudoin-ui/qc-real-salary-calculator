@@ -1,19 +1,35 @@
 :root {
-  --text: #3c3849;
-  --text-h: #08060d;
-  --bg: #f6f5f2;
-  --card-bg: #ffffff;
-  --border: #e0dee5;
-  --accent: #6d3bff;
-  --accent-bg: rgba(109, 59, 255, 0.08);
-  --accent-border: rgba(109, 59, 255, 0.35);
-  --danger: #c0392b;
-  --shadow: rgba(0, 0, 0, 0.06) 0 4px 12px -2px;
+  /* Catppuccin Macchiato */
+  --ctp-rosewater: #f4dbd6;
+  --ctp-mauve: #c6a0f6;
+  --ctp-red: #ed8796;
+  --ctp-green: #a6da95;
+  --ctp-text: #cad3f5;
+  --ctp-subtext0: #a5adcb;
+  --ctp-overlay1: #8087a2;
+  --ctp-surface2: #5b6078;
+  --ctp-surface1: #494d64;
+  --ctp-surface0: #363a4f;
+  --ctp-base: #24273a;
+  --ctp-mantle: #1e2030;
+  --ctp-crust: #181926;
+
+  --text: var(--ctp-text);
+  --text-h: var(--ctp-rosewater);
+  --bg: var(--ctp-mantle);
+  --card-bg: var(--ctp-base);
+  --field-bg: var(--ctp-surface0);
+  --border: var(--ctp-surface1);
+  --accent: var(--ctp-mauve);
+  --accent-bg: rgba(198, 160, 246, 0.12);
+  --accent-border: rgba(198, 160, 246, 0.4);
+  --danger: var(--ctp-red);
+  --shadow: rgba(0, 0, 0, 0.35) 0 4px 12px -2px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
 
   font: 16px/145% var(--sans);
-  color-scheme: light;
+  color-scheme: dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -146,7 +162,7 @@ legend {
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
-  background: #fff;
+  background: var(--field-bg);
 }
 
 .number-field__input-wrap:focus-within {
@@ -155,6 +171,8 @@ legend {
 
 .number-field input {
   border: none;
+  background: transparent;
+  color: var(--text);
   padding: 8px 10px;
   width: 100%;
   font-size: 14px;
@@ -173,6 +191,14 @@ input[type='number'],
 input[type='text'],
 select {
   font-family: var(--sans);
+  background: var(--field-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+select option {
+  background: var(--field-bg);
+  color: var(--text);
 }
 
 .checkbox-field {
@@ -247,12 +273,12 @@ button {
 }
 
 button.secondary {
-  background: #fff;
+  background: var(--field-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 8px 14px;
   font-size: 13px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 button.secondary:hover {
@@ -269,7 +295,7 @@ button.secondary:hover {
 }
 
 .icon-button:hover {
-  background: rgba(192, 57, 43, 0.1);
+  background: rgba(237, 135, 150, 0.15);
 }
 
 .expense-list {
