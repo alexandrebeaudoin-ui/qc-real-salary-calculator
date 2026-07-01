@@ -1,4 +1,4 @@
-import type { AppState, ContributionRates, IncomeProfile, TaxSchedule } from './types'
+import type { AppState, ContributionRates, IncomeProfile, RrspContribution, TaxSchedule } from './types'
 
 export const STORAGE_VERSION = 1
 
@@ -48,6 +48,14 @@ export const DEFAULT_CONTRIBUTIONS: ContributionRates = {
   },
 }
 
+// Cotisation REER : optionnelle, désactivée par défaut.
+export const DEFAULT_RRSP: RrspContribution = {
+  enabled: false,
+  mode: 'pourcentage',
+  annualAmount: 0,
+  percentage: 5,
+}
+
 export const DEFAULT_INCOME: IncomeProfile = {
   mode: 'annuel',
   hourlyRate: 25,
@@ -76,6 +84,7 @@ export function createDefaultState(): AppState {
       qpip: { ...DEFAULT_CONTRIBUTIONS.qpip },
       ei: { ...DEFAULT_CONTRIBUTIONS.ei },
     },
+    rrsp: { ...DEFAULT_RRSP },
     expenses: {
       mortgageMonthly: 0,
       items: [],

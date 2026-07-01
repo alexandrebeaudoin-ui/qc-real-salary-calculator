@@ -27,6 +27,12 @@ export function BreakdownView({ breakdown }: BreakdownViewProps) {
             <td>Salaire brut annuel</td>
             <td>{formatCurrency(b.grossAnnual)}</td>
           </tr>
+          {b.rrspContribution > 0 && (
+            <tr>
+              <td>− Cotisation REER (déductible)</td>
+              <td>−{formatCurrency(b.rrspContribution)}</td>
+            </tr>
+          )}
           <tr>
             <td>− Impôt fédéral (après abattement de {formatCurrency(b.federalAbatement)})</td>
             <td>−{formatCurrency(b.federalTaxNet)}</td>

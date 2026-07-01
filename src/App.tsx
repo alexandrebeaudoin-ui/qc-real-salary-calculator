@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
 import { computeBreakdown } from './domain/calc/pipeline'
+import { computeGrossAnnual } from './domain/calc/income'
 import { DepensesSection } from './components/DepensesSection'
 import { ParametresFiscauxSection } from './components/ParametresFiscauxSection'
+import { ReerSection } from './components/ReerSection'
 import { ResultatSection } from './components/ResultatSection'
 import { RevenuSection } from './components/RevenuSection'
 import { useAppState } from './state/useAppState'
@@ -9,6 +11,7 @@ import { useAppState } from './state/useAppState'
 function App() {
   const [state, dispatch] = useAppState()
   const breakdown = useMemo(() => computeBreakdown(state), [state])
+  const grossAnnual = useMemo(() => computeGrossAnnual(state.income), [state.income])
 
   return (
     <div className="app-shell">
@@ -20,6 +23,7 @@ function App() {
       <main className="app-layout">
         <div className="app-layout__inputs">
           <RevenuSection income={state.income} dispatch={dispatch} />
+          <ReerSection rrsp={state.rrsp} grossAnnual={grossAnnual} dispatch={dispatch} />
           <ParametresFiscauxSection state={state} dispatch={dispatch} />
           <DepensesSection expenses={state.expenses} dispatch={dispatch} />
         </div>

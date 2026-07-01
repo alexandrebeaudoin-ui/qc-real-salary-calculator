@@ -20,12 +20,21 @@ export function computeTotalFixedExpensesAnnual(state: AppState): number {
   return mortgageAnnual + itemsAnnual
 }
 
+export function computeRrspContribution(grossAnnual: number, rrsp: AppState['rrsp']): number {
+  if (!rrsp.enabled) return 0
+  const amount = rrsp.mode === 'pourcentage' ? grossAnnual * (rrsp.percentage / 100) : rrsp.annualAmount
+  return Math.max(0, Math.min(amount, grossAnnual))
+}
+
 export function computeBreakdown(state: AppState): Breakdown {
   const grossAnnual = computeGrossAnnual(state.income)
 
-  // Simplification v1 : revenu imposable = revenu brut (on ignore la
-  // déductibilité mineure de la part RRQ supplémentaire et du RQAP).
-  const taxableIncome = grossAnnual
+  const rrspContribution = computeRrspContribution(grossAnnual, state.rrsp)
+
+  // Simplification v1 : le revenu imposable = revenu brut moins la cotisation
+  // REER (pleinement déductible). On ignore la déductibilité mineure de la
+  // part RRQ supplémentaire et du RQAP.
+  const taxableIncome = grossAnnual - rrspContribution
 
   const federalTaxBeforeAbatement = computeProgressiveTax(taxableIncome, state.federalTax)
   const federalAbatement = federalTaxBeforeAbatement * state.quebecAbatement
@@ -33,10 +42,12 @@ export function computeBreakdown(state: AppState): Breakdown {
 
   const quebecTax = computeProgressiveTax(taxableIncome, state.quebecTax)
 
+  // Les cotisations RRQ/RQAP/AE sont basées sur le salaire brut, pas sur le
+  // revenu imposable après REER.
   const contributions = computeContributions(grossAnnual, state.contributions)
 
   const afterTaxAndContributions =
-    grossAnnual - federalTaxNet - quebecTax - contributions.total
+    grossAnnual - rrspContribution - federalTaxNet - quebecTax - contributions.total
 
   const totalFixedExpensesAnnual = computeTotalFixedExpensesAnnual(state)
   const disposableAnnual = afterTaxAndContributions - totalFixedExpensesAnnual
@@ -47,6 +58,8 @@ export function computeBreakdown(state: AppState): Breakdown {
 
   return {
     grossAnnual,
+    rrspContribution,
+    taxableIncome,
     federalTaxBeforeAbatement,
     federalAbatement,
     federalTaxNet,

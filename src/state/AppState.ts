@@ -8,6 +8,7 @@ import type {
   IncomeProfile,
   QpipRates,
   QppRates,
+  RrspContribution,
   TaxBracket,
 } from '../domain/types'
 
@@ -23,6 +24,7 @@ export type Action =
   | { type: 'UPDATE_QPP'; patch: Partial<QppRates> }
   | { type: 'UPDATE_QPIP'; patch: Partial<QpipRates> }
   | { type: 'UPDATE_EI'; patch: Partial<EiRates> }
+  | { type: 'UPDATE_RRSP'; patch: Partial<RrspContribution> }
   | { type: 'UPDATE_MORTGAGE'; value: number }
   | { type: 'ADD_EXPENSE' }
   | { type: 'UPDATE_EXPENSE'; id: string; patch: Partial<Expense> }
@@ -91,6 +93,9 @@ export function appReducer(state: AppState, action: Action): AppState {
         ...state,
         contributions: { ...state.contributions, ei: { ...state.contributions.ei, ...action.patch } },
       }
+
+    case 'UPDATE_RRSP':
+      return { ...state, rrsp: { ...state.rrsp, ...action.patch } }
 
     case 'UPDATE_MORTGAGE':
       return { ...state, expenses: { ...state.expenses, mortgageMonthly: action.value } }

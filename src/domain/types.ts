@@ -60,6 +60,15 @@ export interface Expenses {
   items: Expense[]
 }
 
+export type RrspContributionMode = 'montant' | 'pourcentage'
+
+export interface RrspContribution {
+  enabled: boolean
+  mode: RrspContributionMode
+  annualAmount: number
+  percentage: number
+}
+
 export interface AppState {
   version: number
   income: IncomeProfile
@@ -67,11 +76,14 @@ export interface AppState {
   quebecTax: TaxSchedule
   quebecAbatement: number
   contributions: ContributionRates
+  rrsp: RrspContribution
   expenses: Expenses
 }
 
 export interface Breakdown {
   grossAnnual: number
+  rrspContribution: number
+  taxableIncome: number
   federalTaxBeforeAbatement: number
   federalAbatement: number
   federalTaxNet: number

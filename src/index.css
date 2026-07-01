@@ -175,6 +175,14 @@ select {
   font-family: var(--sans);
 }
 
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
 .mode-toggle {
   display: flex;
   gap: 20px;

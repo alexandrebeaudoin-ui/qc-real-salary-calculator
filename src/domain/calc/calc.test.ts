@@ -155,6 +155,38 @@ describe('computeBreakdown end-to-end sanity', () => {
     expect(withVacation.realHourly).toBeGreaterThan(noVacation.realHourly)
   })
 
+  it('RRSP contribution reduces taxable income and disposable income by less than the full amount', () => {
+    const state = createDefaultState()
+    state.income = {
+      mode: 'annuel',
+      annualSalary: 60000,
+      hourlyRate: 0,
+      hoursPerWeek: 40,
+      weeksPerYear: 52,
+      paidVacationWeeks: 0,
+      unpaidWeeks: 0,
+    }
+    const withoutRrsp = computeBreakdown(state)
+
+    state.rrsp = { enabled: true, mode: 'montant', annualAmount: 5000, percentage: 0 }
+    const withRrsp = computeBreakdown(state)
+
+    expect(withRrsp.taxableIncome).toBeCloseTo(withoutRrsp.taxableIncome - 5000, 5)
+    // Les cotisations RRQ/RQAP/AE restent basées sur le brut, pas sur le revenu imposable après REER.
+    expect(withRrsp.totalContributions).toBeCloseTo(withoutRrsp.totalContributions, 5)
+    // Le disponible baisse, mais de moins de 5000$ grâce à l'économie d'impôt.
+    const drop = withoutRrsp.disposableAnnual - withRrsp.disposableAnnual
+    expect(drop).toBeLessThan(5000)
+    expect(drop).toBeGreaterThan(0)
+  })
+
+  it('RRSP contribution is disabled by default and has no effect when disabled', () => {
+    const state = createDefaultState()
+    expect(state.rrsp.enabled).toBe(false)
+    const breakdown = computeBreakdown(state)
+    expect(breakdown.rrspContribution).toBe(0)
+  })
+
   it('respects user-edited brackets (zeroing all rates removes income tax)', () => {
     const state = createDefaultState()
     state.federalTax.brackets = state.federalTax.brackets.map((b) => ({ ...b, rate: 0 }))
